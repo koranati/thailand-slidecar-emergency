@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "id": "bma-traffic-public",
+    "name": "BMA Traffic CCTV — แผนที่กล้องสาธารณะ กทม.",
+    "district": "",
+    "road": "กรุงเทพมหานคร",
+    "lat": 13.7563,
+    "lng": 100.5018,
+    "online": true,
+    "source": "สำนักการจราจรและขนส่ง กรุงเทพมหานคร",
+    "url": "https://cpudapp.bangkok.go.th/bmatraffic/",
+    "note": "Official public CCTV traffic map. Individual camera feeds will be added only when a stable public endpoint and coordinates are verified."
+  }
+]
