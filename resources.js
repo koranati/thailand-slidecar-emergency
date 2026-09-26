@@ -68,6 +68,7 @@
   }
   document.getElementById('open-resources').onclick = event => open('all', event.currentTarget);
   document.getElementById('open-emergency').onclick = event => open('emergency', event.currentTarget);
+  window.addEventListener('open-resource-category', event => open(event.detail || 'all', document.querySelector(`[data-layer="${event.detail === 'water' ? 'flood' : event.detail}"]`) || document.getElementById('open-resources')));
   document.getElementById('close-resources').onclick = () => dialog.close();
   dialog.addEventListener('close', () => opener?.focus());
   filters.forEach(button => button.onclick = () => select(button.dataset.category));
@@ -98,3 +99,5 @@
   retry.onclick = load;
   load();
 })();
+
+
