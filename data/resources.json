@@ -1,0 +1,281 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-09-26",
+  "verificationNote": "ตรวจ URL ด้วยเครื่องมือเว็บก่อนบันทึก opened = เปิดหน้าได้ ไม่ได้ยืนยันว่าข้อมูลสดหรือทุกฟังก์ชันทำงาน; unconfirmed = เครื่องมือเปิดไม่ได้หรือหมดเวลา ไม่ได้สรุปว่าเว็บไซต์ล่ม",
+  "sources": [
+    {
+      "id": "thaiwater",
+      "name": "ThaiWater One Map",
+      "provider": "สถาบันสารสนเทศทรัพยากรน้ำ",
+      "categories": [
+        "water"
+      ],
+      "url": "https://www.thaiwater.net/new4all",
+      "description": "ระดับน้ำ สถานีตรวจวัด และข้อมูลเขื่อนทั่วประเทศ",
+      "verification": {
+        "checkedAt": "2026-09-26",
+        "status": "opened",
+        "evidenceUrl": "https://www.thaiwater.net/new4all",
+        "note": "เปิดหน้าเว็บไซต์ได้; ยังไม่ได้ตรวจข้อมูลสดทุกฟังก์ชัน"
+      }
+    },
+    {
+      "id": "doh-hdms",
+      "name": "DOH HDMS • CCTV / น้ำท่วม",
+      "provider": "กรมทางหลวง",
+      "categories": [
+        "water",
+        "cctv",
+        "traffic"
+      ],
+      "url": "https://hdms.doh.go.th/dashboard",
+      "description": "ติดตามภัยพิบัติและสภาพเส้นทางทางหลวง",
+      "verification": {
+        "checkedAt": "2026-09-26",
+        "status": "unconfirmed",
+        "evidenceUrl": "https://www.doh.go.th/content/page/page/411937",
+        "note": "ยังยืนยันการเปิดหน้าไม่ได้จากเครื่องมือตรวจสอบ"
+      }
+    },
+    {
+      "id": "longdo",
+      "name": "Longdo Traffic",
+      "provider": "Longdo",
+      "categories": [
+        "cctv",
+        "traffic"
+      ],
+      "url": "https://traffic.longdo.com/main/",
+      "description": "แผนที่และรายงานสภาพจราจร",
+      "verification": {
+        "checkedAt": "2026-09-26",
+        "status": "opened",
+        "evidenceUrl": "https://traffic.longdo.com/main/",
+        "note": "เปิดหน้าเว็บไซต์ได้; ยังไม่ได้ตรวจข้อมูลสดทุกฟังก์ชัน"
+      }
+    },
+    {
+      "id": "bma-cctv",
+      "name": "BMA Traffic CCTV",
+      "provider": "สำนักการจราจรและขนส่ง กทม.",
+      "categories": [
+        "cctv",
+        "traffic"
+      ],
+      "url": "https://cpudapp.bangkok.go.th/bmatraffic/",
+      "description": "เปิดระบบ CCTV สาธารณะเพื่อตรวจสภาพจราจร กทม.",
+      "verification": {
+        "checkedAt": "2026-09-26",
+        "status": "unconfirmed",
+        "evidenceUrl": "https://cpudapp.bangkok.go.th/bmatraffic/",
+        "note": "ยังยืนยันการเปิดหน้าไม่ได้จากเครื่องมือตรวจสอบ"
+      }
+    },
+    {
+      "id": "gistda",
+      "name": "GISTDA เช็คน้ำ",
+      "provider": "GISTDA",
+      "categories": [
+        "water"
+      ],
+      "url": "https://floodcheck.gistda.or.th/",
+      "description": "ข้อมูลพื้นที่เสี่ยงน้ำท่วมและการคาดการณ์ของระบบเช็คน้ำ",
+      "verification": {
+        "checkedAt": "2026-09-26",
+        "status": "unconfirmed",
+        "evidenceUrl": "https://opendata.gistda.or.th/dataset/floodcheck",
+        "note": "ยังยืนยันการเปิดหน้าไม่ได้จากเครื่องมือตรวจสอบ"
+      }
+    },
+    {
+      "id": "windy",
+      "name": "Windy",
+      "provider": "Windy",
+      "categories": [
+        "rain"
+      ],
+      "url": "https://www.windy.com/",
+      "description": "แผนที่อากาศและเรดาร์ฝน เลือกชั้นข้อมูลในเว็บไซต์ต้นทาง",
+      "verification": {
+        "checkedAt": "2026-09-26",
+        "status": "opened",
+        "evidenceUrl": "https://www.windy.com/",
+        "note": "เปิดหน้าเว็บไซต์ได้; ยังไม่ได้ตรวจข้อมูลสดทุกฟังก์ชัน"
+      }
+    },
+    {
+      "id": "tmd",
+      "name": "TMD Radar",
+      "provider": "กรมอุตุนิยมวิทยา",
+      "categories": [
+        "rain"
+      ],
+      "url": "https://weather.tmd.go.th/",
+      "description": "ภาพเรดาร์ฝนจากกรมอุตุนิยมวิทยา",
+      "verification": {
+        "checkedAt": "2026-09-26",
+        "status": "unconfirmed",
+        "evidenceUrl": "https://weather.tmd.go.th/",
+        "note": "ยังยืนยันการเปิดหน้าไม่ได้จากเครื่องมือตรวจสอบ"
+      }
+    },
+    {
+      "id": "google-flood",
+      "name": "Google Flood Hub",
+      "provider": "Google",
+      "categories": [
+        "water"
+      ],
+      "url": "https://sites.research.google/floods/",
+      "description": "ข้อมูลพยากรณ์น้ำท่วมในพื้นที่ที่มีบริการ",
+      "verification": {
+        "checkedAt": "2026-09-26",
+        "status": "opened",
+        "evidenceUrl": "https://sites.research.google/floods/",
+        "note": "เปิดหน้าเว็บไซต์ได้; ยังไม่ได้ตรวจข้อมูลสดทุกฟังก์ชัน"
+      }
+    },
+    {
+      "id": "bma-rain",
+      "name": "BMA Rain Monitoring",
+      "provider": "สำนักการระบายน้ำ กทม.",
+      "categories": [
+        "rain"
+      ],
+      "url": "https://weather.bangkok.go.th/rain",
+      "description": "ข้อมูลตรวจวัดปริมาณฝนในกรุงเทพมหานคร",
+      "verification": {
+        "checkedAt": "2026-09-26",
+        "status": "unconfirmed",
+        "evidenceUrl": "https://weather.bangkok.go.th/rain",
+        "note": "ยังยืนยันการเปิดหน้าไม่ได้จากเครื่องมือตรวจสอบ"
+      }
+    },
+    {
+      "id": "bma-flood",
+      "name": "BMA Road Flood Monitoring",
+      "provider": "สำนักการระบายน้ำ กทม.",
+      "categories": [
+        "water",
+        "traffic"
+      ],
+      "url": "https://weather.bangkok.go.th/flood/",
+      "description": "ข้อมูลตรวจวัดน้ำท่วมถนนในกรุงเทพมหานคร",
+      "verification": {
+        "checkedAt": "2026-09-26",
+        "status": "unconfirmed",
+        "evidenceUrl": "https://weather.bangkok.go.th/flood/",
+        "note": "ยังยืนยันการเปิดหน้าไม่ได้จากเครื่องมือตรวจสอบ"
+      }
+    },
+    {
+      "id": "bma-klong",
+      "name": "BMA KlongMap",
+      "provider": "สำนักการระบายน้ำ กทม.",
+      "categories": [
+        "water"
+      ],
+      "url": "https://weather.bangkok.go.th/KlongMap",
+      "description": "ติดตามข้อมูลคลองของกรุงเทพมหานคร",
+      "verification": {
+        "checkedAt": "2026-09-26",
+        "status": "unconfirmed",
+        "evidenceUrl": "https://weather.bangkok.go.th/KlongMap",
+        "note": "ยังยืนยันการเปิดหน้าไม่ได้จากเครื่องมือตรวจสอบ"
+      }
+    }
+  ],
+  "hotlines": [
+    {
+      "id": "ddpm",
+      "name": "ปภ. • DDPM",
+      "phone": "1784",
+      "description": "แจ้งสาธารณภัย ขอความช่วยเหลือและอพยพ",
+      "coverage": "ทั่วประเทศ",
+      "categories": [
+        "emergency"
+      ],
+      "verification": {
+        "checkedAt": "2026-09-26",
+        "status": "official-reference",
+        "evidenceUrl": "https://ddc.disaster.go.th/login.do"
+      },
+      "lineId": "@1784DDPM"
+    },
+    {
+      "id": "ems",
+      "name": "การแพทย์ฉุกเฉิน • EMS",
+      "phone": "1669",
+      "description": "เจ็บป่วยฉุกเฉิน",
+      "coverage": "ทั่วประเทศ",
+      "categories": [
+        "emergency"
+      ],
+      "verification": {
+        "checkedAt": "2026-09-26",
+        "status": "official-reference",
+        "evidenceUrl": "https://www.niems.go.th/1/Upload/migrate/File/255904220957149495_ZN1yUPbC9fyvamTJ.pdf"
+      }
+    },
+    {
+      "id": "doh",
+      "name": "กรมทางหลวง • DOH",
+      "phone": "1586",
+      "description": "สอบถามเส้นทางและแจ้งเหตุบนทางหลวง",
+      "coverage": "ทางหลวงทั่วประเทศ",
+      "categories": [
+        "emergency"
+      ],
+      "verification": {
+        "checkedAt": "2026-09-26",
+        "status": "official-reference",
+        "evidenceUrl": "https://www.doh.go.th/content/page/page/411937"
+      }
+    },
+    {
+      "id": "drr",
+      "name": "กรมทางหลวงชนบท • DRR",
+      "phone": "1146",
+      "description": "สอบถามเส้นทางทางหลวงชนบท",
+      "coverage": "ทางหลวงชนบททั่วประเทศ",
+      "categories": [
+        "emergency"
+      ],
+      "verification": {
+        "checkedAt": "2026-09-26",
+        "status": "official-reference",
+        "evidenceUrl": "https://localkc.drr.go.th/contact"
+      }
+    },
+    {
+      "id": "pea",
+      "name": "การไฟฟ้าส่วนภูมิภาค • PEA",
+      "phone": "1129",
+      "description": "แจ้งเหตุไฟฟ้าขัดข้อง",
+      "coverage": "ต่างจังหวัด ยกเว้นนนทบุรีและสมุทรปราการ",
+      "categories": [
+        "emergency"
+      ],
+      "verification": {
+        "checkedAt": "2026-09-26",
+        "status": "official-reference",
+        "evidenceUrl": "https://www.pea.co.th/contact-us"
+      }
+    },
+    {
+      "id": "mea",
+      "name": "การไฟฟ้านครหลวง • MEA",
+      "phone": "1130",
+      "description": "แจ้งเหตุไฟฟ้าขัดข้อง",
+      "coverage": "กรุงเทพฯ นนทบุรี และสมุทรปราการ",
+      "categories": [
+        "emergency"
+      ],
+      "verification": {
+        "checkedAt": "2026-09-26",
+        "status": "official-reference",
+        "evidenceUrl": "https://measpark.mea.or.th/press-release/news35-1/"
+      }
+    }
+  ]
+}
