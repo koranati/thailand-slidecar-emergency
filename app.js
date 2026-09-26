@@ -1,14 +1,53 @@
-const map=L.map('map',{zoomControl:false}).setView([13.7563,100.5018],11);L.control.zoom({position:'bottomright'}).addTo(map);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(map);
-const layers={cctv:L.layerGroup().addTo(map),flood:L.layerGroup().addTo(map),slidecar:L.layerGroup().addTo(map)};const enabled={cctv:true,flood:true,slidecar:true};let data={cctv:[],flood:[],slidecar:[]},searchMarker=null,searchController=null;
-const districts=['พระนคร','ดุสิต','หนองจอก','บางรัก','บางเขน','บางกะปิ','ปทุมวัน','ป้อมปราบศัตรูพ่าย','พระโขนง','มีนบุรี','ลาดกระบัง','ยานนาวา','สัมพันธวงศ์','พญาไท','ธนบุรี','บางกอกใหญ่','ห้วยขวาง','คลองสาน','ตลิ่งชัน','บางกอกน้อย','บางขุนเทียน','ภาษีเจริญ','หนองแขม','ราษฎร์บูรณะ','บางพลัด','ดินแดง','บึงกุ่ม','สาทร','บางซื่อ','จตุจักร','บางคอแหลม','ประเวศ','คลองเตย','สวนหลวง','จอมทอง','ดอนเมือง','ราชเทวี','ลาดพร้าว','วัฒนา','บางแค','หลักสี่','สายไหม','คันนายาว','สะพานสูง','วังทองหลาง','คลองสามวา','บางนา','ทวีวัฒนา','ทุ่งครุ','บางบอน'];
-const ds=document.querySelector('#district'),qel=document.querySelector('#q'),searchForm=document.querySelector('#map-search'),searchSubmit=searchForm.querySelector('button'),status=document.querySelector('#status'),feedback=document.querySelector('#layer-feedback'),feedbackText=document.querySelector('#layer-feedback-text'),feedbackAction=document.querySelector('#layer-feedback-action');const layerNames={cctv:'CCTV',flood:'น้ำท่วม',slidecar:'รถสไลด์'};districts.sort((a,b)=>a.localeCompare(b,'th')).forEach(x=>ds.add(new Option(x,x)));const esc=(s='')=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-function matches(x){const d=ds.value,q=qel.value.trim().toLowerCase();return(!d||x.district===d)&&(!q||`${x.name||''} ${x.road||''} ${x.district||''} ${x.area||''} ${x.phone||''}`.toLowerCase().includes(q))}
-function popup(x,type){let b=`<b>${esc(x.name||'ไม่ระบุชื่อ')}</b><br>${esc(x.district||'')} ${esc(x.road||x.area||'')}`;if(x.phone)b+=`<br>☎ <a href="tel:${esc(x.phone)}">${esc(x.phone)}</a>`;if(x.note)b+=`<br><small>${esc(x.note)}</small>`;if(x.source)b+=`<br><small>แหล่งข้อมูล: ${esc(x.source)}</small>`;if(x.image)b+=`<br><img loading="lazy" referrerpolicy="no-referrer" src="${esc(x.image)}" alt="CCTV">`;if(x.url)b+=`<br><a href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">เปิดแหล่งข้อมูล ↗</a>`;return b}
-function validPoints(type){return data[type].filter(x=>Number.isFinite(+x.lat)&&Number.isFinite(+x.lng))}
-function render(){Object.values(layers).forEach(l=>l.clearLayers());let counts={cctv:0,flood:0,slidecar:0};for(const type of Object.keys(data)){if(enabled[type])data[type].filter(matches).forEach(x=>{if(!Number.isFinite(+x.lat)||!Number.isFinite(+x.lng))return;counts[type]++;const color=type==='cctv'?(x.online===false?'#6b7280':'#047857'):type==='flood'?'#2563eb':'#ea580c';L.circleMarker([+x.lat,+x.lng],{radius:type==='cctv'?7:8,weight:2,color,fillOpacity:.88}).bindPopup(popup(x,type)).addTo(layers[type])});const button=document.querySelector(`[data-layer="${type}"]`);button.querySelector('.pill-count').textContent=validPoints(type).length.toLocaleString('th-TH');button.setAttribute('aria-label',`${layerNames[type]} ${enabled[type]?'เปิด':'ปิด'} มี ${validPoints(type).length} จุด`)}const summary=Object.keys(data).map(type=>`${layerNames[type]} ${enabled[type]?counts[type].toLocaleString('th-TH')+' จุด':'ปิด'}`).join(' · ');status.textContent=summary+(qel.value.trim()&&!Object.values(counts).some(Boolean)?' · กด “ค้นหา” เพื่อค้นหาสถานที่บนแผนที่':'')}
-function showLayerFeedback(type){const total=validPoints(type).length;if(!enabled[type]){feedbackText.textContent=`ปิดเลเยอร์ ${layerNames[type]} แล้ว`;feedbackAction.hidden=true}else if(total){feedbackText.textContent=`เปิดเลเยอร์ ${layerNames[type]} แล้ว พบ ${total.toLocaleString('th-TH')} จุด`;feedbackAction.hidden=true}else{feedbackText.textContent=`ยังไม่มีจุด${layerNames[type]}ที่ยืนยันพิกัดบนแผนที่`;feedbackAction.hidden=false;feedbackAction.textContent=type==='slidecar'?'ดูสายด่วนฉุกเฉิน':'ดูแหล่งข้อมูลต้นทาง';feedbackAction.onclick=()=>window.dispatchEvent(new CustomEvent('open-resource-category',{detail:type==='slidecar'?'emergency':type==='cctv'?'cctv':'water'}))}feedback.classList.add('show');clearTimeout(showLayerFeedback.timer);showLayerFeedback.timer=setTimeout(()=>feedback.classList.remove('show'),7000)}
-async function searchPlace(event){event.preventDefault();const term=qel.value.trim();if(!term){feedbackText.textContent='กรุณาพิมพ์ชื่อถนน แยก หรือสถานที่';feedbackAction.hidden=true;feedback.classList.add('show');qel.focus();return}searchController?.abort();searchController=new AbortController();searchSubmit.disabled=true;searchSubmit.textContent='กำลังค้น…';feedback.classList.remove('show');try{const area=ds.value?`, ${ds.value}`:'';const params=new URLSearchParams({q:`${term}${area}, กรุงเทพมหานคร, ประเทศไทย`,format:'jsonv2',limit:'1',countrycodes:'th',viewbox:'100.327,13.955,100.938,13.493',bounded:'1','accept-language':'th'});const response=await fetch(`https://nominatim.openstreetmap.org/search?${params}`,{signal:searchController.signal,headers:{Accept:'application/json'}});if(!response.ok)throw new Error(`HTTP ${response.status}`);const [result]=await response.json();if(!result){feedbackText.textContent=`ไม่พบสถานที่ “${term}” ลองใช้ชื่อถนนหรือแยกที่สั้นลง`;feedbackAction.hidden=true;feedback.classList.add('show');return}if(searchMarker)map.removeLayer(searchMarker);const point=[+result.lat,+result.lon];searchMarker=L.marker(point).addTo(map).bindPopup(`<b>ผลการค้นหา</b><br>${esc(result.display_name)}`).openPopup();map.setView(point,16);feedbackText.textContent=`พบ “${term}” และเลื่อนไปยังตำแหน่งแล้ว`;feedbackAction.hidden=true;feedback.classList.add('show')}catch(error){if(error.name!=='AbortError'){feedbackText.textContent='ค้นหาสถานที่ไม่ได้ในขณะนี้ กรุณาลองอีกครั้ง';feedbackAction.hidden=true;feedback.classList.add('show');console.warn('Place search failed',error)}}finally{searchSubmit.disabled=false;searchSubmit.textContent='ค้นหา'}}
-ds.onchange=render;qel.oninput=render;searchForm.onsubmit=searchPlace;document.querySelectorAll('[data-layer]').forEach(b=>b.onclick=()=>{const t=b.dataset.layer;enabled[t]=!enabled[t];b.classList.toggle('active',enabled[t]);b.setAttribute('aria-pressed',String(enabled[t]));render();showLayerFeedback(t)});document.querySelector('#locate').onclick=()=>map.locate({setView:true,maxZoom:15});map.on('locationfound',e=>L.circleMarker(e.latlng,{radius:8,color:'#7c3aed',fillOpacity:.9}).bindPopup('ตำแหน่งโดยประมาณของคุณ').addTo(map).openPopup());
-async function getJSON(path){try{const r=await fetch(path,{cache:'no-store'});return r.ok?await r.json():[]}catch(e){console.warn(path,e);return[]}}
-async function load(){const [c,f,s]=await Promise.all([getJSON('./data/cameras.json'),getJSON('./data/flood.json'),getJSON('./data/slidecars.json')]);data={cctv:c,flood:f,slidecar:s};render()}load();
-
+import {DATA_URL,readProviders,filterProviders,options,checkedTime} from './data.mjs';
+const $ = id => document.getElementById(id);
+let providers = [], limit = 30, loading = false, loaded = false, fetchedAt = null;
+const dateFormat = new Intl.DateTimeFormat('th-TH',{dateStyle:'medium',timeZone:'Asia/Bangkok'});
+const timeFormat = new Intl.DateTimeFormat('th-TH',{dateStyle:'medium',timeStyle:'short',timeZone:'Asia/Bangkok'});
+function node(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
+function setOptions(select, values, placeholder) { const previous = select.value; select.replaceChildren(new Option(placeholder,''), ...values.map(v => new Option(v,v))); if (values.includes(previous)) select.value = previous; }
+function districts() { const province = $('province').value; setOptions($('district'),province ? options(providers.filter(p=>p.province===province),'district') : [],province ? 'ทุกเขต / อำเภอ' : 'เลือกจังหวัดก่อน'); $('district').disabled = !province; }
+function card(p) {
+  const article = node('article','card'); const top = node('div','card-head');
+  top.append(node('p','location',p.province + (p.district ? ' · '+p.district : '')),node('span','badge'+(p.allDay?'':' unknown'),p.allDay?'24 ชั่วโมง':'ไม่ระบุ 24 ชม.'));
+  article.append(top,node('h3','',p.name),node('p','type',p.type || 'ไม่ระบุประเภทบริการ'),node('p','area',p.area || 'สอบถามพื้นที่บริการโดยตรง'));
+  const meta = node('div','card-meta'); meta.append(node('p','',`ตรวจสอบตามชีต: ${p.checked || 'ไม่ระบุวันที่'}`),node('p','',`แหล่งข้อมูล: ${p.source || 'ไม่ระบุ'}`)); article.append(meta);
+  if (p.phones.length) {
+    for (const number of p.phones) {
+      const display = p.phones.length === 1 ? p.phone : number;
+      article.append(node('span','phone',display)); const call = node('a','call','☎ โทรทันที'); call.href='tel:'+number; call.setAttribute('aria-label',`โทรหา ${p.name} ที่ ${number}`); article.append(call);
+    }
+  } else article.append(node('p','small muted',p.phone ? `เบอร์ที่ระบุ: ${p.phone} — โปรดตรวจสอบในชีตต้นฉบับ` : 'ยังไม่มีเบอร์โทร กรุณาดูชีตต้นฉบับ'));
+  return article;
+}
+function render() {
+  const matched = filterProviders(providers,{query:$('search').value,province:$('province').value,district:$('district').value,allDay:$('hours').checked});
+  $('results-title').textContent = `พบ ${matched.length.toLocaleString('th-TH')} ผู้ให้บริการ`;
+  $('status').textContent = `พบ ${matched.length} ผู้ให้บริการ แสดง ${Math.min(limit,matched.length)} รายการ`;
+  $('cards').replaceChildren(...matched.slice(0,limit).map(card)); $('empty').hidden = matched.length !== 0; $('more').hidden = matched.length <= limit;
+  $('more').textContent = `แสดงเพิ่มเติม (${Math.max(0,matched.length-limit)} รายการ)`;
+}
+function reset() { $('search').value=''; $('province').value=''; $('district').value=''; $('hours').checked=false; districts(); limit=30; if(loaded)render(); }
+function dates() { const dates = providers.map(p=>checkedTime(p.checked)).filter(x=>x!==null); $('updated').textContent = `วันที่ตรวจสอบล่าสุดที่ระบุในชีต: ${dates.length ? dateFormat.format(new Date(Math.max(...dates))) : 'ไม่ระบุ'} · ดึงข้อมูล: ${timeFormat.format(fetchedAt)} น. (เวลาไทย)`; }
+async function load() {
+  if (loading) return; loading=true; $('refresh').disabled=true; $('refresh').textContent='กำลังโหลด…'; $('cards').setAttribute('aria-busy','true'); $('error').hidden=true; $('loading').hidden=loaded;
+  if (!loaded) { $('empty').hidden=true; $('results-title').textContent='กำลังโหลดข้อมูล…'; }
+  $('status').textContent='กำลังโหลดข้อมูลล่าสุด';
+  try {
+    const response = await fetch(DATA_URL+'&_='+Date.now(),{cache:'no-store',signal:AbortSignal.timeout(15000)});
+    if (!response.ok) throw new Error('HTTP '+response.status);
+    const result = readProviders(await response.text()); providers = result.providers; fetchedAt = new Date(); loaded=true;
+    setOptions($('province'),options(providers,'province'),'ทุกจังหวัดที่มีข้อมูล'); $('province').disabled=false; districts(); dates();
+    $('coverage').textContent=`ฐานข้อมูลมี ${providers.length} ราย ใน ${options(providers,'province').length} จังหวัด • ยังไม่ครอบคลุมทุกพื้นที่ • อ่านชีตใหม่อัตโนมัติทุก 5 นาที`+(result.skipped ? ` • ข้าม ${result.skipped} แถวที่ไม่มีชื่อหรือจังหวัด` : ''); render();
+  } catch {
+    $('error').textContent=loaded ? 'อัปเดตไม่สำเร็จ กำลังแสดงข้อมูลจากการโหลดครั้งก่อนตามเวลาที่ระบุ กรุณาตรวจสอบอินเทอร์เน็ตแล้วกด “โหลดข้อมูลใหม่” หรือเปิดชีตต้นฉบับ' : 'โหลดข้อมูลไม่ได้ กรุณาตรวจสอบอินเทอร์เน็ตแล้วกด “โหลดข้อมูลใหม่” หรือเปิด Google Sheet ต้นฉบับด้านล่าง';
+    $('error').hidden=false; $('status').textContent='โหลดข้อมูลไม่สำเร็จ'; if(!loaded)$('results-title').textContent='ยังโหลดรายชื่อไม่ได้';
+  } finally { loading=false; $('refresh').disabled=false; $('refresh').textContent='↻ โหลดข้อมูลใหม่'; $('loading').hidden=true; $('cards').setAttribute('aria-busy','false'); }
+}
+$('search').addEventListener('input',()=>{limit=30;if(loaded)render();});
+$('province').addEventListener('change',()=>{$('district').value='';districts();limit=30;if(loaded)render();});
+for(const id of ['district','hours'])$(id).addEventListener('change',()=>{limit=30;if(loaded)render();});
+for(const id of ['reset','empty-reset'])$(id).addEventListener('click',reset);
+$('refresh').addEventListener('click',load); $('more').addEventListener('click',()=>{const oldCount=$('cards').children.length;limit+=30;render();const next=$('cards').children[oldCount];if(next){next.tabIndex=-1;next.focus();}});
+setInterval(()=>{if(document.visibilityState==='visible')load();},300000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&(!fetchedAt||Date.now()-fetchedAt.getTime()>300000))load();});
+load();

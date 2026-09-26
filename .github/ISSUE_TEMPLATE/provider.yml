@@ -1,0 +1,43 @@
+name: แจ้งเพิ่มหรือแก้ไขข้อมูลรถสไลด์
+description: ผู้ดูแลตรวจสอบก่อนแก้ฐานข้อมูลหลัก
+title: "[ข้อมูลรถสไลด์] "
+body:
+  - type: markdown
+    attributes:
+      value: "ข้อความนี้เป็นสาธารณะ กรุณาส่งเฉพาะข้อมูลติดต่อธุรกิจที่ได้รับอนุญาตให้เผยแพร่ ไม่ส่งข้อมูลลูกค้า ที่อยู่ส่วนบุคคล หรือข้อมูลการเดินทาง ผู้ดูแลจะตรวจสอบก่อนแก้ชีตหลัก"
+  - type: dropdown
+    id: change
+    attributes:
+      label: ประเภทการแจ้ง
+      options:
+        - เพิ่มผู้ให้บริการ
+        - แก้ไขข้อมูลเดิม
+        - แจ้งเบอร์ใช้ไม่ได้ / ขอถอนข้อมูล
+    validations:
+      required: true
+  - type: input
+    id: provider
+    attributes:
+      label: ชื่อผู้ให้บริการ
+    validations:
+      required: true
+  - type: input
+    id: area
+    attributes:
+      label: จังหวัด และเขต/อำเภอ
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: ข้อมูลที่เสนอให้เพิ่มหรือแก้ไข
+      description: เบอร์โทรธุรกิจ พื้นที่ ประเภทบริการ และเวลาทำการ (ระบุ 24 ชม. เฉพาะเมื่อยืนยันแล้ว)
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: แหล่งอ้างอิงและวันที่ตรวจสอบ
+      description: เช่น ลิงก์เพจธุรกิจ หรือรายละเอียดการยืนยันกับผู้ให้บริการ
+    validations:
+      required: true

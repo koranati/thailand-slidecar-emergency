@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {parseCSV,readProviders,filterProviders,phones,checkedTime,options} from '../data.mjs';
+const header='จังหวัด,เขต/อำเภอ,ผู้ให้บริการ,โทรศัพท์,24 ชม.,ประเภท,ที่อยู่/พื้นที่,ตรวจสอบล่าสุด,แหล่งข้อมูล\n';
+const csv=header+'กรุงเทพมหานคร,บางแค,"ร้าน ก, รถยก",083-996-1759,ใช่,รถยก,"บางแค\nซอย 4",26/09/2569,Google Business\nนนทบุรี,ปากเกร็ด,ร้าน ข,098-352-5956,ไม่,รถสไลด์,บ้านใหม่,25/09/2569,เพจ\n';
+test('CSV supports quotes, commas, multiline fields, CRLF and escaped quotes',()=>assert.deepEqual(parseCSV('"a,b","a""b"\r\n"x\ny",z'),[['a,b','a"b'],['x\ny','z']]));
+test('bad response and incomplete schema fail instead of claiming no results',()=>{for(const s of ['<html>login</html>','a,b\n1,2','"unterminated'])assert.throws(()=>readProviders(s));});
+test('empty, incomplete and duplicate rows',()=>{const data=readProviders(csv+'\n,เขต,ไม่มีจังหวัด,01234,,,,,\n'+csv.split('\n')[3]+'\n');assert.equal(data.providers.length,2);assert.equal(data.skipped,1);assert.equal(readProviders(header).providers.length,0);});
+test('search by name, area, formatted number, Thai digits and combined filters',()=>{const p=readProviders(csv).providers;for(const query of ['ร้าน ก','บางแค','083996','๐๘๓๙๙๖','083 996'])assert.equal(filterProviders(p,{query}).length,1);assert.equal(filterProviders(p,{province:'นนทบุรี',allDay:true}).length,0);assert.equal(filterProviders(p,{province:'นนทบุรี',district:'ปากเกร็ด'}).length,1);assert.equal(filterProviders(p,{query:'ไม่มีผลลัพธ์'}).length,0);});
+test('new provinces/districts are derived from live records',()=>{const p=readProviders(csv+ 'เชียงใหม่,เมืองเชียงใหม่,ร้าน ค,0812345678,ใช่,รถยก,,26/09/2569,เพจ').providers;assert.equal(options(p,'province').length,3);assert.deepEqual(options(p.filter(p=>p.province==='นนทบุรี'),'district'),['ปากเกร็ด']);});
+test('telephone sanitizing rejects invalid and javascript values',()=>{assert.deepEqual(phones('087-321-5203 / 02-123-4567'),['0873215203','021234567']);assert.deepEqual(phones('+66 87 321 5203'),['+66873215203']);assert.deepEqual(phones('javascript:alert(1)'),[]);assert.deepEqual(phones('1234'),[]);});
+test('Buddhist-era date validates actual calendar dates',()=>{assert.equal(checkedTime('26/09/2569'),Date.UTC(2026,8,26));assert.equal(checkedTime('31/02/2569'),null);assert.equal(checkedTime(''),null);});

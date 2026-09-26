@@ -1,45 +1,83 @@
-# Bangkok Emergency Map
+# รถสไลด์ฉุกเฉินทั่วไทย
 
-Mobile-first public emergency map for Bangkok.
+เว็บค้นหารายชื่อรถสไลด์/รถยกเพื่อสาธารณะ ใช้งานบนมือถือได้โดยไม่ต้องเข้าสู่ระบบ ไม่มีค่าค้นหา และไม่ใช่ศูนย์จัดรถหรือการรับรองผู้ให้บริการ
 
-## Modules
-- CCTV: public/authorized BMA traffic camera sources only
-- Flood: planned
-- Slide-car emergency: planned
+## แหล่งข้อมูลและการอัปเดต
 
-## CCTV data
-`data/cameras.json` accepts objects with `name`, `district`, `road`, `lat`, `lng`, `image`, `url`, `source`, `online`.
+[Google Sheet ต้นฉบับ](https://docs.google.com/spreadsheets/d/1uYb8Ufwz7TxadUyrPzpkZh5dCMIUAIAHqvCyx6a0dJ4/edit) แท็บ `ฐานข้อมูลรถสไลด์` เป็นแหล่งข้อมูลหลัก อ่านผ่าน Google Visualization CSV endpoint แบบ read-only ไม่ใช้ API key และไม่ส่งคำสั่งเขียนชีต
 
-The app intentionally does not access private CCTV feeds, credentials, NVRs, or BMA internal systems. Camera entries should be populated only from publicly published/authorized sources.
+เมื่อเปิดหน้า กดโหลดใหม่ หรือทุก 5 นาทีขณะหน้าเว็บเปิดอยู่ เว็บจะอ่านข้อมูลใหม่ เมื่อกลับจากแท็บอื่นหลัง 5 นาทีจะอ่านใหม่ด้วย Google อาจ cache ผลลัพธ์ชั่วคราว จึงไม่รับประกันการเปลี่ยนแปลงทันทีในระดับวินาที หากการอัปเดตล้มเหลวหลังโหลดสำเร็จ จะแสดงข้อมูลเดิมพร้อมคำเตือนและเวลาดึงข้อมูลเดิม
 
-## Run
-Serve the repository as static files (GitHub Pages, Vercel, Netlify, etc.).
+ณ วันที่พัฒนา ชีตมี 21 รายการ รวมรายการที่ระบุพื้นที่ทั่วประเทศ กรุงเทพมหานคร นนทบุรี สุพรรณบุรี และสระบุรี ยังไม่ใช่รายชื่อครบทุกจังหวัด เว็บแสดงจำนวนและขอบเขตจากข้อมูลจริง ไม่สร้างรายชื่อหรือเบอร์ขึ้นเอง รายการที่นำเข้าจาก `slide_car_list.csv` ยังไม่ได้รับการโทรยืนยัน และช่องวันที่ตรวจสอบจึงเว้นว่างไว้
 
-## Resource directory
-The mobile resource dialog is independent of Leaflet and the existing CCTV, flood,
-and slide-car layers. Open **แหล่งข้อมูล** or **สายด่วนฉุกเฉิน**, filter by water,
-rain, CCTV, traffic or emergency, and search names, descriptions or phone numbers.
-Telephone links open the device dialer; the DDPM LINE ID is displayed for manual
-addition (the LINE URL could not be verified).
+คงชื่อแท็บและหัวตารางแถวแรกดังนี้ (สลับลำดับคอลัมน์หรือเพิ่มคอลัมน์อื่นได้):
 
-`data/resources.json` contains 11 external resources and 6 hotlines with stable
-IDs, categories, provider/coverage, descriptions, and dated verification evidence.
-These are a directory, not imported live feeds or new geographic map markers.
-Existing map datasets and `app.js` are unchanged.
+| หัวคอลัมน์ | วิธีดูแล |
+| --- | --- |
+| จังหวัด | ใช้ชื่อจังหวัดเดียวกันอย่างสม่ำเสมอ จำเป็นต่อการแสดงรายการ |
+| เขต/อำเภอ | ใช้ชื่อเขตหรืออำเภอ ไม่รวมตำบลหลายแห่งในช่องนี้ |
+| ผู้ให้บริการ | ชื่อธุรกิจ จำเป็นต่อการแสดงรายการ |
+| โทรศัพท์ | ตั้งรูปแบบเซลล์เป็น Plain text เพื่อเก็บเลข 0 นำหน้า; หลายเบอร์คั่นด้วย `/` หรือ `,` |
+| 24 ชม. | `ใช่` เฉพาะกรณีที่ตรวจสอบแล้ว ค่าอื่นจะไม่ผ่านตัวกรอง 24 ชั่วโมง |
+| ประเภท | เช่น รถยก/รถสไลด์ |
+| ที่อยู่/พื้นที่ | พื้นที่บริการที่เปิดเผยต่อสาธารณะ |
+| ตรวจสอบล่าสุด | `วัน/เดือน/ปี` เช่น `26/09/2569` (รองรับ พ.ศ. และ ค.ศ.) |
+| แหล่งข้อมูล | แนะนำ URL ของธุรกิจ พร้อมหลักฐานที่ตรวจสอบได้ |
 
-### Link checks — 2026-09-26
-- Opened via web inspection: ThaiWater, Longdo (redirects to /main/), Windy,
-  Google Flood Hub. This does not validate all interactive features or freshness.
-- Could not confirm opening via the inspection tool: DOH HDMS, BMA CCTV,
-  GISTDA Floodcheck, TMD radar, BMA rain, road flood and KlongMap. Timeouts/tool
-  access failures are not proof that these services are down. Their supplied
-  public URLs remain visible with an explicit unconfirmed label.
-- GISTDA's public data catalog identifies Floodcheck's URL; API access requires
-  requesting an API key. No authenticated integration is attempted.
-- Hotline evidence links are stored per entry. Phone calls were not placed.
-- To update: edit the catalog, repeat public URL checks, and update each entry's
-  `verification.checkedAt`, `status`, and evidence. Do not label a timeout as verified.
+เพิ่ม/แก้/ลบแถวในชีตได้เลย ไม่ต้องแก้โค้ดหรือ deploy ใหม่ จังหวัดและเขต/อำเภอเพิ่มตามข้อมูลโดยอัตโนมัติ ข้ามแถวว่าง แถวที่ไม่มีชื่อหรือจังหวัด และรวมรายการซ้ำที่จังหวัด/อำเภอ/ชื่อ/เบอร์ตรงกัน เบอร์ผิดรูปแบบแสดงข้อความแทนปุ่มโทร
 
-Serve over HTTP(S) so the catalog fetch works. If it fails, all six telephone
-links and the DDPM LINE ID remain available, with a retry button. The dialog
-supports Escape, focus return, keyboard filters and 44px minimum action targets.
+วันตรวจสอบในชีตคือข้อมูลที่ผู้ดูแลกรอก ไม่ใช่เวลาปรับปรุงไฟล์ของ Google ส่วนเวลาดึงข้อมูลระบุแยกเป็นเวลาไทย เว็บไม่ได้รับรองความพร้อมรับงาน ราคา เวลาถึง หรือความสามารถลุยน้ำ ผู้ใช้ต้องโทรยืนยันเอง
+
+## แหล่งข้อมูลน้ำ ฝน CCTV และสายด่วน
+
+ปุ่มลอยเปิดรายการใน `data/resources.json` ซึ่งมีแหล่งข้อมูลภายนอก 11 รายการและสายด่วน 6 หมายเลข แยกจากฐานข้อมูลรถสไลด์ ผู้ใช้กรองหมวด ค้นหา เปิดเว็บต้นทาง หรือกดโทรได้ หากโหลดไฟล์ไม่ได้ สายด่วนหลักยังแสดงเป็น fallback
+
+สถานะลิงก์เป็นผลตรวจ ณ วันที่ระบุในแต่ละรายการ ไม่ใช่การรับประกันว่าข้อมูลสดหรือบริการพร้อมใช้งาน ต้องตรวจเวลาอัปเดตที่เว็บไซต์ต้นทาง การแก้ catalog ควรทดสอบ URL แล้วอัปเดต `verification.checkedAt`, `status` และ `evidenceUrl` โดยไม่ระบุว่า timeout เป็นลิงก์เสีย
+
+## การรับแจ้งเพิ่ม/แก้ข้อมูล
+
+ปุ่มส่งไปยัง [GitHub Issues](https://github.com/koranati/thailand-slidecar-emergency/issues/new?template=provider.yml) โดยใช้ฟอร์ม `.github/ISSUE_TEMPLATE/provider.yml` ผู้แจ้งต้องมีบัญชี GitHub และข้อความเป็นสาธารณะ ไม่มีการเขียนเข้าชีตอัตโนมัติ
+
+ผู้ดูแลตรวจหลักฐาน/ติดต่อธุรกิจ ยืนยันการอนุญาตเผยแพร่ แล้วแก้ชีตและลงวันที่ตรวจสอบ ก่อนปิด issue ห้ามใส่ข้อมูลลูกค้า ตำแหน่งส่วนบุคคล หรือข้อมูลส่วนตัวใน issue
+
+ตั้งชีตเป็น **Anyone with the link → Viewer** และให้สิทธิ์ Editor เฉพาะผู้ดูแล อย่าเปิด Editor ให้สาธารณะ เว็บนี้ไม่เปลี่ยนสิทธิ์ Google Drive หากต้องการช่องทางไม่ต้องล็อกอิน สามารถสร้าง Google Form แยกสำหรับรับคำขอ แล้วเปลี่ยนลิงก์ `#report` ใน `index.html`; อย่าเชื่อมคำตอบเข้าฐานข้อมูลหลักโดยตรง
+
+## พัฒนาและทดสอบ
+
+ใช้ Node.js 22+ ไม่ต้องติดตั้ง dependencies หรือ build:
+
+```sh
+node server.mjs
+# เปิด http://127.0.0.1:4173
+node --test tests/*.test.mjs
+```
+
+`npm start` และ `npm test` เป็นคำสั่งย่อเมื่อมี npm ต้องเสิร์ฟผ่าน HTTP ไม่เปิด HTML ด้วย `file://` เนื่องจากใช้ JavaScript modules และ fetch ข้อมูล
+
+- `data.mjs`: CSV parser, validation, search/filter, phone/date normalization
+- `app.js`: อ่านชีต แสดง cards และ loading/error/empty states
+- `resources.js`, `resources.css`, `data/resources.json`: dialog แหล่งข้อมูลและสายด่วน
+- `styles.css`: responsive 1/2/3 columns, focus styles, reduced motion
+- `tests/`: regression tests สำหรับการอ่านข้อมูลและตัวกรอง
+- `legacy-map.html`, `legacy-map.js`, `data/cameras.json`, `data/flood.json`, `data/slidecars.json`: ต้นแบบแผนที่เดิม
+
+ข้อมูลจากชีตแสดงด้วย `textContent` ไม่ใช้ HTML ที่มาจากข้อมูล เบอร์ `tel:` ผ่าน validation ไม่มี trackers หรือ cookies และหน้าหลักไม่ขอตำแหน่ง แสดงครั้งละ 30 cards และกดเพิ่มได้เพื่อไม่สร้าง DOM จำนวนมากบนมือถือ
+
+## Deploy: GitHub Pages
+
+ใช้ repository สาธารณะ `koranati/thailand-slidecar-emergency` และ Settings → Pages → Deploy from a branch → `main` → `/ (root)` → Save เปิด Enforce HTTPS เมื่อพร้อม ไฟล์ `.nojekyll` ทำให้เสิร์ฟ static files โดยไม่ต้องใช้ Jekyll
+
+GitHub Pages จะ deploy ใหม่เมื่อ push โค้ดเข้า main การแก้ข้อมูลในชีตไม่ต้อง push โค้ด สามารถดูสถานะใน Actions → pages build and deployment และ URL ใน Settings → Pages
+
+อ้างอิง: [GitHub Pages publishing source](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
+
+## การดูแลและแก้ปัญหา
+
+1. หากโหลดข้อมูลไม่ได้ เปิดชีตด้วยหน้าต่างไม่ล็อกอินเพื่อตรวจสิทธิ์ Viewer และชื่อแท็บ/หัวคอลัมน์ ตรวจ network/CORS ของ CSV endpoint
+2. หากรายการไม่ปรากฏ ตรวจชื่อผู้ให้บริการและจังหวัดในแถวนั้น และล้างตัวกรอง หน้าเว็บบอกจำนวนแถวที่ข้าม
+3. หากเบอร์ไม่ขึ้นปุ่มโทร ตรวจ 0 นำหน้าและรูปแบบเบอร์ รองรับเบอร์ไทย 9/10 หลักและ +66 คั่นหลายเบอร์ด้วย `/`
+4. ตรวจรายการที่เลิกบริการ/เบอร์ผิด และวันที่ตรวจสอบอย่างสม่ำเสมอ โดยเฉพาะช่วงภัยพิบัติ
+5. ตรวจ UI ที่ความกว้าง 320, 390, 768 และ 1440px, keyboard Tab, focus, dialog, empty/error/retry และ tel links หลังเปลี่ยนโค้ด
+6. Google Sheets และ GitHub Pages เป็นบริการภายนอก ไม่มี SLA สำหรับการช่วยเหลือฉุกเฉิน หากข้อมูลใหญ่หรือมีผู้ใช้มากจนเจอข้อจำกัด ค่อยย้ายส่วนอ่านข้อมูลไป backend/cache พร้อมเวลาอัปเดตและสถานะข้อมูลเก่าที่ชัดเจน
+
+ย้อนรุ่นด้วย `git revert <commit>` และ push main โดยไม่ลบประวัติ ไม่ใส่ credentials หรือข้อมูลส่วนตัวใน repository

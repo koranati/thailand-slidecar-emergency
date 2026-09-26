@@ -6,14 +6,14 @@
 #resource-dialog{width:min(760px,calc(100% - 24px));max-height:88vh;max-height:88dvh;padding:20px;border:0;border-radius:20px;color:#0f172a;background:#f8fafc;overflow:auto;overscroll-behavior:contain}
 #resource-dialog::backdrop{background:#0f172a99}
 .resource-header{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.resource-header h1{font-size:1.3rem;margin:0}
+.resource-header h2{font-size:1.3rem;margin:0}
 .resource-header button{flex-shrink:0;background:white}
 .resource-intro,.resource-disclaimer{color:#475569;font-size:.9rem;line-height:1.6}
 .resource-filters{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
 .resource-filters button{background:white;color:#334155}
 .resource-filters button[aria-pressed="true"]{background:#0f766e;color:white;border-color:#0f766e!important}
 .resource-search{display:block;font-size:.9rem;font-weight:600}
-.resource-search input{display:block;min-height:44px;width:100%;margin-top:6px;font-size:16px}
+.resource-search input{display:block;min-height:44px;width:100%;margin-top:6px;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font-size:16px}
 .resource-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .resource-card{background:white;border:1px solid #dce3ec;border-radius:16px;padding:16px;overflow-wrap:anywhere}
 .resource-card h2{font-size:1.05rem;margin:0 0 8px}
@@ -26,4 +26,4 @@
 .resource-evidence{display:inline-block;color:#334155;min-height:44px;padding:12px 0;font-size:.8rem}
 #resource-dialog button:focus-visible,#resource-dialog a:focus-visible,#resource-dialog input:focus-visible,.resource-launcher button:focus-visible{outline:3px solid #2563eb;outline-offset:3px}
 #retry-resources{background:white;margin-bottom:12px}
-@media(max-width:520px){.resource-grid{grid-template-columns:1fr}#resource-dialog{padding:16px}.resource-launcher{gap:6px}.resource-launcher button{font-size:.85rem;padding:10px}.resource-header h1{font-size:1.1rem}}
+@media(max-width:520px){.resource-grid{grid-template-columns:1fr}#resource-dialog{padding:16px}.resource-launcher{gap:6px}.resource-launcher button{font-size:.85rem;padding:10px}.resource-header h2{font-size:1.1rem}}
